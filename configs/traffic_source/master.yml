@@ -20,9 +20,16 @@
           
     - name: Copy Galting Install script
       copy:
-        src: 
+        src: gatling_install.sh
         dest: ~/gatling_install.sh
+        mode: "u=rwx"
 
     - name: Execute Gatling install script
       become_user: root
       command: ~/gatling_install.sh
+
+    - name: Copy Galting Simulation script
+      copy:
+        src:  load_test.scala
+        dest: ~/load_test.scala
+        mode: "u=rwx"

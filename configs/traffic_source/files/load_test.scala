@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class HighLoadCMS extends Simulation {
+class load_test extends Simulation {
 
 	val target = System.getProperty("target")
 
@@ -44,7 +44,8 @@ class HighLoadCMS extends Simulation {
 
 	setUp(
 		scn.inject(
-    		rampConcurrentUsers(0) to (500) during (60 seconds)
+    		rampUsersPerSec(0) to (500) during (30 seconds),
+			constantUsersPerSec(500) during (30 seconds)
 		).protocols(httpProtocol)
 	)
 }

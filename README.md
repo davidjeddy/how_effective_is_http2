@@ -44,3 +44,6 @@ wordpress cache plugin used is [WP Fastest Cache](https://wordpress.org/plugins/
 
 ## Report Reading
 [Gatling.io](https://gatling.io/docs/current/general/reports/) has an explainatin of how to interprest the results output.
+
+## Download reports from Traffic_Source
+scp i ./configs/shared/http2_effectiveness.pem ubuntu@{TRAFFIC_SOURCE_IP}:/root/results ./
