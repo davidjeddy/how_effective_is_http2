@@ -43,7 +43,7 @@
 
     - name: Copy install script to remote
       copy:
-        src: ../shared/install.sh
+        src: wordpress_install.sh
         dest: /root/install.sh
         mode: "u=rwx"
 
