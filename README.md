@@ -1,49 +1,61 @@
 # Usage
 
 ## Pre-req's:
- - [AWS Account](http://aws.amazon.com)
+ - [AWS Account](http://aws.amazon.com/) - Configuration not included herein
  - [Ansible 2.5.1](https://www.ansible.com/) - Configur machine
  - [Gatling.io 3.0](https://gatling.io/) - Load Test Tool
  - [Terraform 0.11.8](https://www.terraform.io/) - Provision machine
 
+## Description
+
+This is an experement to show the performance increase of enabling HTTP2 on a Nginx web server.
+
 ## Usage
 
-### Configurations / Setup
+The./config directory contains three sub directories: ./traffic_source, ./traffic_target_http, and ./traffic_target_http2. When started traffic_source is configured with Gatling 3.0 installed and ready to run. The two *_target_* directories are nearly identical configurations outside of the Nginx 'default' configuration.
 
-    export PATH=$PATH:/path/to/gatling/bin/
+To execute the performance comparison follow the below steps:
 
-    cd ~/configs/CACHE_OPTION
+[Setup your AWS CLI and API keys.](https://www.terraform.io/docs/providers/aws/)
+
+
+
+First change into the directory of the protocal you want to test. Ideally you will do this for both HTTP and HTTP2 for  side-by-side comparison.
+
+    cd /path/to/root/of/this/project    
+    cd /configs/target_target_http 
+    # OR `cd target_target_http2` to start up a HTTP2 Nginx server
     terraform init
-    terraform plan -out tf.plan
+    terraform plan --out target_source.plan
+    terraform apply --auto-approve --out target_source.plan
 
-### Execution
+Thay will stand up a basic LEMP server with Wordpress 4.x installed. Next we need to also start up a target_source instance.
 
-    terraform apply -auto-approve tf.plan
+    cd /path/to/root/of/this/project    
+    cd /configs/target_source
+    terraform init
+    terraform plan --out target_source.plan
+    terraform apply --auto-approve --out target_source.plan
 
-### Test
-cd /path/to/root/of/this/project
+Wait for the process to complete. Using the IP output ssh into the traffic_source machine
 
-    JAVA_OPTS="-Dtarget=TERRAFORM_OUTPUT_IP" \
-    gatling.sh \
-    -sf ./testing/load/gatling \
-    -rf ./testing/load/gatling/results/CACHE_OPTION/ \
-    -s HighLoadCMS
+    ssh -i ../shared/http2_effectiveness.pem ubuntu@TERRAFORM_OUTPIT_IP
 
-Exp:
+Once in the traffic source machine, switch to root and root's home dir.
 
-     JAVA_OPTS="-Dtarget=35.170.196.248" ./gatling.sh -sf ./testing/load/gatling -rf ./testing/load/gatling/results/nginx_cache -s HighLoadCMS -rd 'nginx cache test 2'
+    sudo su
+    cd ~/
+    JAVA_OPTS="-Dtarget=TERRAFORM_TRAFFIC_TARGET_OUTPUT_IP" gatling.sh  -sf ./ -rf ./results/ -s HTTP_PROTOCAL
+
+In order to down load the results we need to change permissions
+
+    chown -R 0777 ./results
 
 ### Tear down
 
+To remove the services run the following command in both the traffic_target_* and traffic_source directories.
+
     terraform destroy -auto-approve
-
-## Notes
-wordpress cache plugin used is [WP Fastest Cache](https://wordpress.org/plugins/wp-fastest-cache/) with the following settings.
-
-[IMG HERE]
-
-## Report Reading
-[Gatling.io](https://gatling.io/docs/current/general/reports/) has an explainatin of how to interprest the results output.
 
 ## Download reports from Traffic_Source
 scp i ./configs/shared/http2_effectiveness.pem ubuntu@{TRAFFIC_SOURCE_IP}:/root/results ./
