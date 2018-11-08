@@ -1,7 +1,5 @@
 #!/bin/bash
 # @source https://dzone.com/articles/how-to-install-gatling-on-ubuntu
-apt-get update -y
-apt-get install -y unzip
 add-apt-repository -y ppa:webupd8team/java
 apt-get install -y oracle-java8-installer
 update-alternatives --config java
