@@ -26,10 +26,6 @@ echo 'GATLING_HOME="/root/gatling-charts-highcharts-bundle-3.0.0"' >> /etc/envir
 
 export PATH=$PATH:/root/gatling-charts-highcharts-bundle-3.0.0/bin
 
-mkdir -p ./results/http
-mkdir -p ./results/http2
-
-touch ./results/http/test
-touch ./results/http2/test
+mkdir -p ./results
 
 chown -R 0777 ./results

@@ -45,11 +45,15 @@ Once in the traffic source machine, switch to root and root's home dir.
 
     sudo su
     cd ~/
-    JAVA_OPTS="-Dtarget=TERRAFORM_TRAFFIC_TARGET_OUTPUT_IP" gatling.sh  -sf ./ -rf ./results/ -s HTTP_PROTOCAL
+    JAVA_OPTS="-Dtarget=TARGET_FQDN" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s load_test
 
-In order to down load the results we need to change permissions
+In order to down load the results we need to change permissions to allow all users to read
 
-    chown -R 0777 ./results
+    chown -R 0667 ./results
+
+Then exit out of the target_source machine and use SCP to download the reports
+
+    scp -i /path/to/project/configs/shared/http2_effectiveness.pem ubuntu@TERRAFORM_IP_OUT_OF_TRAFFIC_SOURCE:/root/results ./
 
 ### Tear down
 
@@ -59,3 +63,9 @@ To remove the services run the following command in both the traffic_target_* an
 
 ## Download reports from Traffic_Source
 scp i ./configs/shared/http2_effectiveness.pem ubuntu@{TRAFFIC_SOURCE_IP}:/root/results ./
+
+## NOTES
+### For HTTP/2
+ - IP <-> FQDN has to be updated in Route 53 after `tf apply` for tragget_target*
+ - Terraform does not current support Lightsail port administration, open port 443 for HTTP/2
+ - HTTP/2 req. SSL; ssh into HTTP/2 instance and execute /root/ssl_install.sh to generate a cert

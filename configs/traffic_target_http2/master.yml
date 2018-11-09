@@ -31,7 +31,7 @@
           
     - name: Copy Nginx config to remote
       copy:
-        src: http2.conf
+        src: http.conf
         dest: /etc/nginx/sites-available/default
         backup: true
 
@@ -50,3 +50,9 @@
     - name: Execute install script
       become_user: root
       command: /root/install.sh
+
+    - name: Copy SSL cert install script to remote
+      copy:
+        src: ssl_install.sh
+        dest: /root/ssl_install.sh
+        mode: "u=rwx"

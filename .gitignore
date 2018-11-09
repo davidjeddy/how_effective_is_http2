@@ -1,7 +1,9 @@
+.DS_Store
 *.plan
 *.lock.*
 *.pem
 *.backup
 *.tfstate
 *.retry
+/.idea
 *terraform/

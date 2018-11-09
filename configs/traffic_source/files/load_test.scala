@@ -10,7 +10,7 @@ class load_test extends Simulation {
 	val target = System.getProperty("target")
 
 	val httpProtocol = http
-		.baseUrl("http://" + target)
+		.baseUrl(target)
 		.inferHtmlResources()
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
@@ -44,8 +44,7 @@ class load_test extends Simulation {
 
 	setUp(
 		scn.inject(
-    		rampUsersPerSec(0) to (500) during (30 seconds),
-			constantUsersPerSec(500) during (30 seconds)
+			constantUsersPerSec(250) during (30 seconds)
 		).protocols(httpProtocol)
 	)
 }
