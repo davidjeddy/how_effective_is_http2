@@ -12,7 +12,7 @@
  chown -R www-data:www-data /var/www/html
 
 # Place current IP in dump.SQL
-CURRENT_IP="http2effectiveness.davidjeddy.com"
+CURRENT_IP="test.davidjeddy.com"
 sed -i "s/CURRENT_IP/$CURRENT_IP/g" /root/dump.sql
 
 # setup MySQL database user

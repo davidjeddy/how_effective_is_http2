@@ -34,13 +34,12 @@ class Http2Test extends Simulation {
 		.exec(http("request_0")
 			.get("/")
 			.headers(headers_0)
-			.resources(http("request_1")
-			.get("/wp-includes/js/wp-emoji-release.min.js?ver=4.9.8")
-			.headers(headers_1),
-            http("request_2")
-			.get("/favicon.ico")
-			.headers(headers_2)
-			.check(status.is(404))))
+			.resources(
+			    http("request_1")
+			        .get("")
+			        .headers(headers_1)
+		    )
+		)
 
 	setUp(
 		scn.inject(

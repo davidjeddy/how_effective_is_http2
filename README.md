@@ -1,64 +1,79 @@
 # Usage
 
 ## Pre-req's:
- - [AWS Account](http://aws.amazon.com/) - Configuration not included herein
- - [Ansible 2.5.1](https://www.ansible.com/) - Configur machine
- - [Gatling.io 3.0](https://gatling.io/) - Load Test Tool
- - [Terraform 0.11.8](https://www.terraform.io/) - Provision machine
+
+ - [AWS Account](http://aws.amazon.com/) (Configuration not included)
+ - [Ansible 2.5.1](https://www.ansible.com/) -  Resource configuration
+ - [Gatling.io 3.0](https://gatling.io/) - Load testing tool
+ - [Terraform 0.11.8](https://www.terraform.io/) - Provision resources
+ - A (sub)domain - Used for HTTP URL resolution
 
 ## Description
 
-This is an experement to show the performance increase of enabling HTTP2 on a Nginx web server.
+This is an experiment to show the performance increase of enabling HTTP2 on a Nginx web server.
+
+## Description
+
+The./config directory contains three sub directories: ./traffic_source, ./traffic_target_http, and ./traffic_target_http2.
+
+traffic_source a traffic generator resource.
+
+The two traffic_target_* directories are nearly identical configurations, the difference being the toggle of http2.
 
 ## Usage
 
-The./config directory contains three sub directories: ./traffic_source, ./traffic_target_http, and ./traffic_target_http2. When started traffic_source is configured with Gatling 3.0 installed and ready to run. The two *_target_* directories are nearly identical configurations outside of the Nginx 'default' configuration.
+### Traffic Target
 
-To execute the performance comparison follow the below steps:
+Now this will stand up a basic LEMP server with Wordpress 4.x installed. Next we need to also start up a target_source instance.
 
-[Setup your AWS CLI and API keys.](https://www.terraform.io/docs/providers/aws/)
-
-
-
-First change into the directory of the protocal you want to test. Ideally you will do this for both HTTP and HTTP2 for  side-by-side comparison.
-
-    cd /path/to/root/of/this/project    
-    cd /configs/target_target_http 
-    # OR `cd target_target_http2` to start up a HTTP2 Nginx server
+    cd /path/to/project/root    
+    cd ./configs/traffic_target
     terraform init
-    terraform plan --out target_source.plan
-    terraform apply --auto-approve --out target_source.plan
+    terraform plan --out tf.plan
+    terraform apply --auto-approve tf.plan
 
-Thay will stand up a basic LEMP server with Wordpress 4.x installed. Next we need to also start up a target_source instance.
+Wait for the process to complete. Once complete use the IP address and update your (sub)domain with the address.
 
-    cd /path/to/root/of/this/project    
-    cd /configs/target_source
+    test.davidjeddy.com 1.2.3.4
+
+Wait for the TTL (time to live) refreshes. You should be able to visit the  serve via the URL now.
+
+### Traffic Generator
+
+First, stand up the traffic source resources.
+
+    cd /path/to/project/root
+    cd ./configs/traffic_source\
     terraform init
-    terraform plan --out target_source.plan
-    terraform apply --auto-approve --out target_source.plan
+    terraform plan --out tf.plan
+    terraform apply --auto-approve tf.plan
 
-Wait for the process to complete. Using the IP output ssh into the traffic_source machine
+Wait for the process to complete. Using the IP output ssh into the traffic_source machine.
 
     ssh -i ../shared/http2_effectiveness.pem ubuntu@TERRAFORM_OUTPIT_IP
 
-Once in the traffic source machine, switch to root and root's home dir.
+Once logged into the traffic generator, switch to root.
 
     sudo su
     cd ~/
-    JAVA_OPTS="-Dtarget=http://http2effectiveness.davidjeddy.com/" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s Http2Test
+    
+Use the following command to generate traffic, I used my blog as an example.
+
+    JAVA_OPTS="-Dtarget=http://test.davidjeddy.com/" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s Http2Test
+
+If you want to be able to download the generated reports; run the follow before exiting from root.
+
+    chmod -R 0755 ./results &&\ chown -R ubuntu:ubuntu ./results &&\ cp -rf /root/results  /home/ubuntu
+   
+the reports are then available at /home/ubuntu/results and owned by the ubuntu (ssh-able) user.
 
 ### Retrieve Data
-In order to down load the results we need to change permissions to allow all users to read from withing the target source
 
-    chmod -R 0755 ./results &&\
-    chown -R ubuntu:ubuntu ./results &&\
-    cp -rf /root/results  /home/ubuntu
-
-Then exit out of the target_source machine and use SCP to download the reports to the local machine
+From you local machine use SCP to download the generated reports.
 
     scp -r -i ./configs/shared/http2_effectiveness.pem  ubuntu@TRAFFIC_SOURCE_IP:/home/ubuntu/results .
 
-Reports should be availble under ./results directory.
+Reports should be available under ./results directory.
 
 ### Tear down
 
@@ -68,6 +83,5 @@ To remove the services run the following command in both the traffic_target_* an
 
 ## NOTES
 ### For HTTP/2
- - IP <-> FQDN has to be updated in Route 53 after `tf apply` for tragget_target*
- - Terraform does not current support Lightsail port administration, open port 443 for HTTP/2
- - HTTP/2 req. SSL; ssh into HTTP/2 instance and execute /root/ssl_install.sh to generate a cert
+ - HTTP/2 req. SSL; ssh into the traffic_target instance and execute the /root/ssl_install.sh to generate a cert.
+  - Ensure port 443 is open, Terraform does not support this using AWS Lightsail as of time of writing.
