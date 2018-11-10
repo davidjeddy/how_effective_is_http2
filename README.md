@@ -63,7 +63,7 @@ Use the following command to generate traffic, I used my blog as an example.
 
 If you want to be able to download the generated reports; run the follow before exiting from root.
 
-    chmod -R 0755 ./results &&\ chown -R ubuntu:ubuntu ./results &&\ cp -rf /root/results  /home/ubuntu
+    chmod -R 0755 ./results && chown -R ubuntu:ubuntu ./results && cp -rf /root/results  /home/ubuntu
    
 the reports are then available at /home/ubuntu/results and owned by the ubuntu (ssh-able) user.
 

@@ -43,7 +43,7 @@ class Http2Test extends Simulation {
 
 	setUp(
 		scn.inject(
-			constantUsersPerSec(30) during (300 seconds)
+			constantUsersPerSec(30) during (30 seconds)
 		).protocols(httpProtocol)
 	)
 }

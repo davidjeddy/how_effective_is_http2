@@ -51,6 +51,14 @@
       become_user: root
       command: /root/install.sh
 
+    - name: Copy install script to remote
+      copy:
+        src: ../shared/wp-content
+        dest: /var/www/html/wp-content
+        owner: www-data
+        group: www-data
+        mode: 0644
+
     - name: Copy SSL cert install script to remote
       copy:
         src: ssl_install.sh
