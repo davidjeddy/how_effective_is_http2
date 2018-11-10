@@ -30,6 +30,6 @@
 
     - name: Copy Galting Simulation script
       copy:
-        src:  load_test.scala
-        dest: ~/load_test.scala
+        src:  Http2Test.scala
+        dest: ~/Http2Test.scala
         mode: "u=rwx"

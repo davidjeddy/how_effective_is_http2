@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class load_test extends Simulation {
+class Http2Test extends Simulation {
 
 	val target = System.getProperty("target")
 
@@ -30,7 +30,7 @@ class load_test extends Simulation {
 
     val uri2 = "https://fonts.googleapis.com/css"
 
-	val scn = scenario("HighLoadCMS")
+	val scn = scenario("Http2Test")
 		.exec(http("request_0")
 			.get("/")
 			.headers(headers_0)
@@ -44,7 +44,7 @@ class load_test extends Simulation {
 
 	setUp(
 		scn.inject(
-			constantUsersPerSec(250) during (30 seconds)
+			constantUsersPerSec(45) during (60 seconds)
 		).protocols(httpProtocol)
 	)
 }

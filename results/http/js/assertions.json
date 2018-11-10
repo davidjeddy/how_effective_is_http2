@@ -1,0 +1,10 @@
+{
+  "simulation": "Http2Test",
+  "simulationId": "http2test",
+  "start": 1541809388628,
+  "description": "",
+  "scenarios": ["HighLoadCMS"],
+  "assertions": [
+
+  ]
+}

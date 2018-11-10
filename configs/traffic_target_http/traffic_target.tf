@@ -15,7 +15,7 @@ resource "aws_lightsail_instance" "traffic_target" {
 
   # This is where we configure the instance with ansible-playbook
   provisioner "local-exec" {
-    command = "sleep 60;  ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip_address}', -u ubuntu --private-key ../shared/http2_effectiveness.pem ./master.yml"
+    command = "sleep 60; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip_address}', -u ubuntu --private-key ../shared/http2_effectiveness.pem ./master.yml"
   }
 
   connection {
@@ -23,10 +23,20 @@ resource "aws_lightsail_instance" "traffic_target" {
     host        = "${self.public_ip_address}"
     private_key = "${file("../shared/http2_effectiveness.pem")}"
     user        = "ubuntu"
-    timeout     = "15s"
+    timeout     = "60s"
   }
 }
 
+resource "aws_lightsail_static_ip" "traffic_target" {
+  name = "traffic_target"
+}
+
+resource "aws_lightsail_static_ip_attachment" "traffic_target" {
+  static_ip_name = "${aws_lightsail_static_ip.traffic_target.name}"
+  instance_name  = "${aws_lightsail_instance.traffic_target.name}"
+  depends_on = ["aws_lightsail_instance.traffic_target"]
+}
+
 output "public_ip_address" {
-  value = "${aws_lightsail_instance.traffic_target.public_ip_address}"
+  value = "${aws_lightsail_static_ip.traffic_target.ip_address}"
 }

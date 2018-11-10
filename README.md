@@ -45,24 +45,26 @@ Once in the traffic source machine, switch to root and root's home dir.
 
     sudo su
     cd ~/
-    JAVA_OPTS="-Dtarget=TARGET_FQDN" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s load_test
+    JAVA_OPTS="-Dtarget=http://http2effectiveness.davidjeddy.com/" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s Http2Test
 
-In order to down load the results we need to change permissions to allow all users to read
+### Retrieve Data
+In order to down load the results we need to change permissions to allow all users to read from withing the target source
 
-    chown -R 0667 ./results
+    chmod -R 0755 ./results &&\
+    chown -R ubuntu:ubuntu ./results &&\
+    cp -rf /root/results  /home/ubuntu
 
-Then exit out of the target_source machine and use SCP to download the reports
+Then exit out of the target_source machine and use SCP to download the reports to the local machine
 
-    scp -i /path/to/project/configs/shared/http2_effectiveness.pem ubuntu@TERRAFORM_IP_OUT_OF_TRAFFIC_SOURCE:/root/results ./
+    scp -r -i ./configs/shared/http2_effectiveness.pem  ubuntu@TRAFFIC_SOURCE_IP:/home/ubuntu/results .
+
+Reports should be availble under ./results directory.
 
 ### Tear down
 
 To remove the services run the following command in both the traffic_target_* and traffic_source directories.
 
     terraform destroy -auto-approve
-
-## Download reports from Traffic_Source
-scp i ./configs/shared/http2_effectiveness.pem ubuntu@{TRAFFIC_SOURCE_IP}:/root/results ./
 
 ## NOTES
 ### For HTTP/2
