@@ -51,10 +51,10 @@
       become_user: root
       command: /root/install.sh
 
-    - name: Copy install script to remote
+    - name: Copy application content to remote
       copy:
-        src: ../shared/wp-content
-        dest: /var/www/html/wp-content
+        src: ../shared/wp-content/
+        dest: /var/www/html/wp-content/
         owner: www-data
         group: www-data
         mode: 0644
