@@ -24,8 +24,6 @@ wget https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcha
 unzip gatling-charts-highcharts-bundle-3.0.0-bundle.zip
 echo 'GATLING_HOME="/root/gatling-charts-highcharts-bundle-3.0.0"' >> /etc/environment
 
-export PATH=$PATH:/root/gatling-charts-highcharts-bundle-3.0.0/bin
-
 mkdir -p ./results
 
 chown -R 0777 ./results

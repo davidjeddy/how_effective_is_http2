@@ -37,13 +37,13 @@
 
     - name: Copy SQL dump script to remote
       copy:
-        src: dump.sql
+        src: ../shared/dump.sql
         dest: /root/dump.sql
         mode: "u=rwx"
 
     - name: Copy install script to remote
       copy:
-        src: wordpress_install.sh
+        src: ../shared/wordpress_install.sh
         dest: /root/install.sh
         mode: "u=rwx"
 
