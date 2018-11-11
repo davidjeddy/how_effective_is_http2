@@ -53,11 +53,13 @@
 
     - name: Copy application content to remote
       copy:
-        src: ../shared/wp-content/
-        dest: /var/www/html/wp-content/
+        src: ../shared/wp-content
+        dest: /var/www/html/wp-content
         owner: www-data
         group: www-data
-        mode: 0644
+        mode: "u=rw"
+
+# only used for http/2 configuration
 
     - name: Copy SSL cert install script to remote
       copy:

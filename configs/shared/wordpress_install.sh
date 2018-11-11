@@ -21,6 +21,9 @@ sudo mysql -uroot -proot -hlocalhost -e "DROP DATABASE IF EXISTS database_name_h
 # import SQL DB
 mysql -uroot -proot database_name_here < /root/dump.sql
 
+# unzip content images into WP root
+unzip /root/wp-content.zip /var/www/html
+
 # restart services to take new configurations
 service php-fpm restart
 service mysql restart

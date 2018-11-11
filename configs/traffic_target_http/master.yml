@@ -47,14 +47,14 @@
         dest: /root/install.sh
         mode: "u=rwx"
 
-    - name: Execute install script
-      become_user: root
-      command: /root/install.sh
-
-    - name: Copy install script to remote
+    - name: Copy WP images to remote
       copy:
-        src: ../shared/wp-content
-        dest: /var/www/html/wp-content
+        src: wp-content.zip
+        dest: /root/wp-content.zip
         owner: www-data
         group: www-data
         mode: 0644
+
+    - name: Execute install script
+      become_user: root
+      command: /root/install.sh
