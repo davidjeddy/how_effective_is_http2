@@ -28,6 +28,7 @@
           - php-xmlrpc
           - php-zip
           - php-mysql
+          - unzip
           
     - name: Copy Nginx config to remote
       copy:

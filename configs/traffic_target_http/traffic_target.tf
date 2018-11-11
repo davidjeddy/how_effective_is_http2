@@ -15,7 +15,7 @@ resource "aws_lightsail_instance" "traffic_target" {
 
   # This is where we configure the instance with ansible-playbook
   provisioner "local-exec" {
-    command = "sleep 60; ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_DEBUG=1 ANSIBLE_COWSAY=0 ansible-playbook -i '${self.public_ip_address}', -u ubuntu --private-key ../shared/http2_effectiveness.pem ./master.yml"
+    command = "sleep 60; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip_address}', -u ubuntu --private-key ../shared/http2_effectiveness.pem ./master.yml"
   }
 
   connection {
