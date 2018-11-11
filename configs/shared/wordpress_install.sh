@@ -24,6 +24,9 @@ mysql -uroot -proot database_name_here < /root/dump.sql
 # unzip content images into WP root
 unzip /root/wp-content.zip /var/www/html
 
+# change perms
+chown -R www-data:www-data /var/www/html
+
 # restart services to take new configurations
 service php-fpm restart
 service mysql restart

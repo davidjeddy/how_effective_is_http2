@@ -49,11 +49,9 @@
 
     - name: Copy WP images to remote
       copy:
-        src: wp-content.zip
+        src: ../shared/wp-content.zip
         dest: /root/wp-content.zip
-        owner: www-data
-        group: www-data
-        mode: 0644
+        mode: "u=rwx"
 
     - name: Execute install script
       become_user: root
