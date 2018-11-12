@@ -29,6 +29,7 @@
           - php-zip
           - php-mysql
           - unzip
+          - htop
           
     - name: Copy Nginx config to remote
       copy:
@@ -36,22 +37,10 @@
         dest: /etc/nginx/sites-available/default
         backup: true
 
-    - name: Copy SQL dump script to remote
+    - name: Copy files to remote /root
       copy:
-        src: ../shared/dump.sql
-        dest: /root/dump.sql
-        mode: "u=rwx"
-
-    - name: Copy install script to remote
-      copy:
-        src: ../shared/wordpress_install.sh
-        dest: /root/install.sh
-        mode: "u=rwx"
-
-    - name: Copy WP images to remote
-      copy:
-        src: ../shared/wp-content.zip
-        dest: /root/wp-content.zip
+        src: ./
+        dest: /root
         mode: "u=rwx"
 
     - name: Execute install script

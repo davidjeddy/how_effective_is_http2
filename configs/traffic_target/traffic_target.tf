@@ -1,4 +1,3 @@
-# Create a new GitLab Lightsail Instance
 provider "aws" {
   shared_credentials_file = "~/.aws/credentials"
   region                  = "us-east-1"
@@ -13,7 +12,6 @@ resource "aws_lightsail_instance" "traffic_target" {
   bundle_id         = "nano_1_0"
   key_pair_name     = "http2_effectiveness"
 
-  # This is where we configure the instance with ansible-playbook
   provisioner "local-exec" {
     command = "sleep 60; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.public_ip_address}', -u ubuntu --private-key ../shared/http2_effectiveness.pem ./master.yml"
   }

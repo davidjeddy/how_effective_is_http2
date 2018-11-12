@@ -12,19 +12,15 @@
 
 This is an experiment to show the performance increase of enabling HTTP2 on a Nginx web server.
 
-## Description
-
-The./config directory contains three sub directories: ./traffic_source, ./traffic_target_http, and ./traffic_target_http2.
-
-traffic_source a traffic generator resource.
-
-The two traffic_target_* directories are nearly identical configurations, the difference being the toggle of http2.
+Inside the ./configs directory are traffic_source a traffic_target.
 
 ## Usage
 
 ### Traffic Target
 
-Now this will stand up a basic LEMP server with Wordpress 4.x installed. Next we need to also start up a target_source instance.
+This will stand up a basic LEMP server with Wordpress 4.x installed. Next we need to also start up a target_source instance.
+
+Before anything else edit ./config/traffic_target/files/dump.sql line 11; change the domain to your domain.
 
     cd /path/to/project/root    
     cd ./configs/traffic_target
@@ -34,14 +30,24 @@ Now this will stand up a basic LEMP server with Wordpress 4.x installed. Next we
 
 Wait for the process to complete. Once complete use the IP address and update your (sub)domain with the address.
 
-    test.davidjeddy.com 1.2.3.4
+Example
+
+    your.domain.exp 1.2.3.4
 
 Wait for the TTL (time to live) to refresh. You should be able to visit the site via the URL.
 
 #### For HTTP/2
 
- - HTTP/2 req. SSL; ssh into the traffic_target instance and execute the /root/ssl_install.sh to generate a cert.
- - Ensure port 443 is open, Terraform does not support Lightsail pot management as of the time of writing.
+To enable HTTP2 SSH into the traffic_source machine, sudo to root, and cd to root's home dire.
+
+    ssh -i ./shared/http2_effectiveness.pem ubuntu@TRAFFIC_SOURCE_IP
+    sudo su
+    cd ~/
+
+Then run the `ssl_install.sh` script.
+
+Once completed ensure 443 is reachable. Often this means opening the port.
+**Note**: Terraform does not support Lightsail port management as of the time of writing.
 
 
 ### Traffic Generator
@@ -66,14 +72,15 @@ Switch to root, and goto home dir.
 The following command will generate traffic. Change the target URL of course :).
 
     JAVA_OPTS="-Dtarget=http://test.davidjeddy.com/" ./gatling-charts-highcharts-bundle-3.0.0/bin/gatling.sh  -sf ./ -rf ./results/ -s Http2Test
+    
+To test HTTP2 change to address from http to https.
+
+
+### Retrieving Reports
 
 If you want to be able to download the generated reports, execute the following command.
 
     chmod -R 0755 ./results && chown -R ubuntu:ubuntu ./results && cp -rf /root/results  /home/ubuntu
-   
-the reports are then available at /home/ubuntu/results and owned by the ubuntu (ssh-able) user.
-
-### Retrieve Data
 
 From you local machine use SCP to download the generated reports.
 
@@ -86,3 +93,7 @@ Reports should be available under ./results directory.
 To remove the services run the following command in both the traffic_target_* and traffic_source directories.
 
     terraform destroy -auto-approve
+
+## Testing
+
+TODO: Impairment https://github.com/ottomatica/opunit 
