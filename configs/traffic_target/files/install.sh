@@ -40,6 +40,6 @@ certbot \
 sed -i "s/443 ssl/443 ssl http2/g" /etc/nginx/sites-available/default
 
 # restart services to take new configurations
-service php-fpm restart
-service mysql restart
+service php7.2-fpm restart && \
+service mysql restart && \
 service nginx restart

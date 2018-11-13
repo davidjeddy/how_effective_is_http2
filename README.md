@@ -84,7 +84,7 @@ If you want to be able to download the generated reports, execute the following 
 
 From you local machine use SCP to download the generated reports.
 
-    scp -r -i ./configs/shared/http2_effectiveness.pem  ubuntu@TRAFFIC_SOURCE_IP:/home/ubuntu/results .
+    scp -r -i ./configs/shared/http2_effectiveness.pem  ubuntu@34.200.238.33:/home/ubuntu/results .
 
 Reports should be available under ./results directory.
 
