@@ -1,0 +1,35 @@
+- hosts: all
+
+  become: true
+  gather_facts: False
+
+  pre_tasks:
+    - name: Install Python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+    - name: Update apt repos
+      apt:
+        update_cache: yes
+
+    - name: Installing OS packages
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - unzip
+          
+    - name: Copy Galting Install script
+      copy:
+        src: gatling_install.sh
+        dest: ~/gatling_install.sh
+        mode: "u=rwx"
+
+    - name: Execute Gatling install script
+      become_user: root
+      command: ~/gatling_install.sh
+
+    - name: Copy Galting Simulation script
+      copy:
+        src:  Http2Test.scala
+        dest: ~/Http2Test.scala
+        mode: "u=rwx"
